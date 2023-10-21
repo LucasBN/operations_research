@@ -6,12 +6,15 @@ def read_dataset(filepath):
     for line in open(filepath):
         if line.strip() != "":
             row = line.strip().split(" ")
+
             x.append(list(map(float, row)))
 
     return np.array(x)
 
 
+# Expects that data represents a linear program in standard form
 def optimise(data):
+    print(data)
     # Iteratively apply the simple algorithm until termination
     while data[0][1:-1].max() > 0:
         # Choose NBV to enter the basis
@@ -44,7 +47,7 @@ def optimise(data):
     return tuple(solution)
 
 
-x = read_dataset("data.txt")
+x = read_dataset("tests/test2.txt")
 solution = optimise(x)
 
 print(solution)
