@@ -14,6 +14,7 @@ def read_dataset(filepath):
 
 # Expects that data represents a linear program in standard form
 def optimise(data):
+    print(data)
     # Iteratively apply the simple algorithm until termination
     while data[0][1:-1].max() > 0:
         # Choose NBV to enter the basis
@@ -51,7 +52,7 @@ def optimise(data):
     return tuple(solution)
 
 
-x = read_dataset("tests/cycle.txt")
+x = read_dataset("tests/test3.txt")
 solution = optimise(x)
 
 print(solution)
