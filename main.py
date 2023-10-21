@@ -14,14 +14,18 @@ def read_dataset(filepath):
 
 # Expects that data represents a linear program in standard form
 def optimise(data):
-    print(data)
     # Iteratively apply the simple algorithm until termination
     while data[0][1:-1].max() > 0:
         # Choose NBV to enter the basis
         column = np.argmax(data[0][1:]) + 1
 
+        # Remove degenerate BS by perturbing the data
+        data[1:, -1] = np.where(
+            data[1:, -1] != 0, data[1:, -1], np.finfo(np.float32).eps
+        )
+
         # Choose BV to leave the basis
-        with np.errstate(divide="ignore"):
+        with np.errstate(divide="ignore", invalid="ignore"):
             ratios = data[:, -1] / data[:, column]
         row = np.argmin(np.where(ratios > 0, ratios, np.inf))
 
@@ -42,12 +46,12 @@ def optimise(data):
     # Determine solution from data
     solution = np.zeros((len(data[0]) - 1))
     for i, bv in enumerate(basic_variables):
-        solution[bv] = data[:, -1][i]
+        solution[bv] = round(data[:, -1][i], 5)
 
     return tuple(solution)
 
 
-x = read_dataset("tests/test2.txt")
+x = read_dataset("tests/cycle.txt")
 solution = optimise(x)
 
 print(solution)
